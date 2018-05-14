@@ -1,4 +1,3 @@
-
 //Imports
 const express = require('express')
 const app = express();
@@ -6,7 +5,7 @@ const fetch = require('node-fetch');
 //Business logic
 var userBalances = [{
     userId: "0",
-    balance: 130
+    balance: 100
 }, {
     userId: "1",
     balance: 150
@@ -25,12 +24,13 @@ function handleBalances(req, res) {
     if (userId == null || amount == null) {
         res.send("Invalid request!")
     } else {
+        var currentBalance = userBalances[userId].balance;
         //Calling  an external service which could take some time to finish.
-        fetch("https://httpbin.org/delay/" + Math.floor((Math.random() * 5) + 1))
+        fetch("https://httpbin.org/delay/" + Math.floor((Math.random() * 10) + 1))
             .then(function (response) {
                 if (response.ok) {
-                    var responseStr = "Adding "+amount+" to user " + amount + "...\n";
-                    userBalances[userId].balance += amount;
+                    var responseStr = "Adding "+ amount +" to user " + userId + "...\n";
+                    userBalances[userId].balance = currentBalance + amount;
                     responseStr += "User " + userId + " has " + userBalances[userId].balance;
                     res.send(responseStr);
                 } else {
