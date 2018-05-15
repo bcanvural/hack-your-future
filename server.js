@@ -14,17 +14,17 @@ var users = [{
     balance: 100
 }];
 
-function findUserById(userId){
-    for (var i = 0; i < users.length; i++){
+function findUserById(userId) {
+    for (var i = 0; i < users.length; i++) {
         const userFound = users[i].userId == userId
-        if (userFound){
+        if (userFound) {
             return users[i];
         }
     }
     return null; //Cannot find user!
 }
 
-function handleBalances(req, res) {
+function updateBalance(req, res) {
     if (req.query.length < 2) {
         res.send("Invalid query parameters!")
         return;
@@ -39,8 +39,8 @@ function handleBalances(req, res) {
         fetch("https://httpbin.org/delay/" + Math.floor((Math.random() * 5) + 1))
             .then(function (response) {
                 if (response.ok) {
-                    var responseStr = "Adding "+ amount + " to user " + userId + "...\n";
-                    user.balance  += amount;
+                    var responseStr = "Adding " + amount + " to user " + userId + "...\n";
+                    user.balance += amount;
                     responseStr += "User " + userId + " has " + user.balance;
                     res.send(responseStr);
                 } else {
@@ -54,7 +54,12 @@ function handleBalances(req, res) {
     }
 }
 
+function balances(req, res){
+    res.send(JSON.stringify(users));
+}
+
 //Routes
-app.get('/updatebalance/', handleBalances);
+app.get('/updatebalance/', updateBalance);
+app.get('/balances', balances);
 
 app.listen(3000, () => console.log('Server is listening on port 3000!'))
