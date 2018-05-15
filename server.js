@@ -4,13 +4,13 @@ const app = express();
 const fetch = require('node-fetch');
 //Business logic
 var users = [{
-    userId: "0",
+    userId: 0,
     balance: 100
 }, {
-    userId: "1",
+    userId: 1,
     balance: 150
 }, {
-    userId: "2",
+    userId: 2,
     balance: 100
 }];
 
@@ -25,12 +25,12 @@ function findUserById(userId){
 }
 
 function handleBalances(req, res) {
-    if (req.params.length < 2) {
-        res.send("Invalid request parameters!")
+    if (req.query.length < 2) {
+        res.send("Invalid query parameters!")
         return;
     }
-    const userId = req.params["userId"];
-    const amount = req.params["amount"];
+    const userId = req.query["userId"];
+    const amount = req.query["amount"];
     if (userId == null || amount == null) {
         res.send("Invalid request!")
     } else {
@@ -55,6 +55,6 @@ function handleBalances(req, res) {
 }
 
 //Routes
-app.get('/balances/:userId/:amount', handleBalances);
+app.get('/updatebalance/', handleBalances);
 
 app.listen(3000, () => console.log('Server is listening on port 3000!'))
