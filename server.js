@@ -4,7 +4,7 @@ const app = express();
 const fetch = require('node-fetch');
 const config = require('config');
 //Read config
-const blackboxServerUrl = config.get('blackbox-server-url') || ""; 
+const blackboxServerUrl = config.get('blackbox-server-url') || "";
 //Business logic
 var users = [{
     userId: 0,
@@ -57,19 +57,29 @@ function updateBalance(req, res) {
     }
 }
 
-function balances(req, res){
+function balances(req, res) {
     res.send(JSON.stringify(users));
 }
 
-function invokeBlackboxService(req, res){
-    if (blackboxServerUrl){
-    fetch(blackboxServerUrl + "/updates")
+function invokeBlackboxService(req, res) {
+    const userId = req.query["userId"];
+    if (!userId) {
+        res.send("userId parameter was null");
+    }
+    if (blackboxServerUrl) {
+        fetch(blackboxServerUrl + "/updates")
             .then((promise) => {
                 if (promise.ok) {
-                    promise.json().then(function(updatedUsers){
+                    promise.json().then(function (updatedUsers) {
                         users = updatedUsers;
-                        res.send("User balances were successfully updated.");
-                    }).catch(function(err){
+                        for (var i = 0; i < users.length; i++) {
+                            if (users[i].userId == userId) {
+                                res.send("User with id: " + userId + " has " + users[i].balance);
+                                return;
+                            }
+                        }
+                        res.send("User with id " + userId + "  does not exist");
+                    }).catch(function (err) {
                         res.send("Something bad happened...")
                     })
                 } else {
@@ -80,9 +90,9 @@ function invokeBlackboxService(req, res){
                 console.log(error)
                 res.send(error)
             });
-        } else {
-            res.send("Add blackbox server url to config json!");
-        }
+    } else {
+        res.send("Add blackbox server url to config json!");
+    }
 }
 
 //Routes

@@ -47,7 +47,13 @@ in your browser. Did the user 0's money increase by 100?
 
         localhost:3000/updatebalance?userId=&amount=100
     
- note that user with id 0 still got its balance updated. Why?  
+ note that user with id 0 still got its balance updated. Why?
+
+ 3) Update the file the "blackbox-server-url" property  in "config/default.json" file. This value will be provided. Now there's a new endpoint at:
+
+ localhost:3000/blackbox
+
+ This endpoint invokes an external service and from the response from this service, it updates our userbalances database. However, it turns out sometimes the database is corrupted! Figure out what's happening and think of a workaround.
  
 
 
