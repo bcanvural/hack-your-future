@@ -36,7 +36,7 @@ function updateBalance(req, res) {
     } else {
         const user = findUserById(userId)
         //Calling  an external service which could take some time to finish.
-        fetch("https://httpbin.org/delay/" + Math.floor((Math.random() * 5) + 1))
+        fetch("https://httpbin.org/delay/" + Math.floor((Math.random() * 2) + 1))
             .then(function (response) {
                 if (response.ok) {
                     var responseStr = "Adding " + amount + " to user " + userId + "...\n";
