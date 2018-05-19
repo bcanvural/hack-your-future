@@ -1,7 +1,10 @@
 //Imports
-const express = require('express')
+const express = require('express');
 const app = express();
 const fetch = require('node-fetch');
+const config = require('config');
+//Read config
+const blackboxServerUrl = config.get('blackbox-server-url') || ""; 
 //Business logic
 var users = [{
     userId: 0,
@@ -58,8 +61,33 @@ function balances(req, res){
     res.send(JSON.stringify(users));
 }
 
+function invokeBlackboxService(req, res){
+    if (blackboxServerUrl){
+    fetch(blackboxServerUrl + "/updates")
+            .then((promise) => {
+                if (promise.ok) {
+                    promise.json().then(function(updatedUsers){
+                        users = updatedUsers;
+                        res.send("User balances were successfully updated.");
+                    }).catch(function(err){
+                        res.send("Something bad happened...")
+                    })
+                } else {
+                    res.send("Something bad happened...")
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+                res.send(error)
+            });
+        } else {
+            res.send("Add blackbox server url to config json!");
+        }
+}
+
 //Routes
 app.get('/updatebalance/', updateBalance);
 app.get('/balances', balances);
+app.get('/blackbox', invokeBlackboxService);
 
 app.listen(3000, () => console.log('Server is listening on port 3000!'))
