@@ -4,7 +4,7 @@ The server.js file contains a simple nodejs webapp that lets users manage their 
 
 ## Get Started
 
-Run the following for installing node package dependencies:
+Run the following for installing node package dependencies (within this directory):
 
 
         npm install express node-fetch config
@@ -49,7 +49,22 @@ in your browser. Did the user 0's money increase by 100?
     
  note that user with id 0 still got its balance updated. Why?
 
- 3) Update the file the "blackbox-server-url" property  in "config/default.json" file. This value will be provided. Now there's a new endpoint at:
+3) Visit
+
+        http://localhost:3000/updatebalance?userId=0&amount=million
+
+ note that the user with id 0 got its balance updated. Would you want the app to update your app by 1000000 if you type in million? How can you prevent the null value in the balance when a random string is inserted?
+
+4) Visit
+
+        http://localhost:3000/updatebalance?userId=42&amount=10
+
+User 42 didn't exist yet, check the debug console log. How to prevent this TypeError? What should the app do here?
+
+5) Are there any other bugs you can trigger?
+
+
+6) Update the file the "blackbox-server-url" property  in "config/default.json" file. This value will be provided. Now there's a new endpoint at:
 
         localhost:3000/blackbox
 
