@@ -7,7 +7,7 @@ The server.js file contains a simple nodejs webapp that lets users manage their 
 Run the following for installing node package dependencies:
 
 
-        npm install
+        npm install express node-fetch config
 
 You should now be able to run the server by selecting the Debug tab in VS Code and clicking on the green play button
 
