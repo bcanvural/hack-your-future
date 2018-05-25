@@ -19,12 +19,16 @@ var users = [{
 
 function findUserById(userId) {
     for (var i = 0; i < users.length; i++) {
-        const userFound = users[i].userId == userId
+        const userFound = users[i].userId === Number(userId)
         if (userFound) {
             return users[i];
         }
     }
     return null; //Cannot find user!
+}
+
+function isNumber(num){
+    return typeof num == "number"
 }
 
 function updateBalance(req, res) {
@@ -33,17 +37,25 @@ function updateBalance(req, res) {
         return;
     }
     const userId = req.query["userId"];
-    const amount = req.query["amount"];
-    if (userId == null || amount == null) {
+    const amount = Number(req.query["amount"]);
+    if (amount == 0){
+        res.send("Amount should be different than 0");
+        return;
+    }
+    if (userId == null || userId === "" || amount == null || isNaN(amount)) {
         res.send("Invalid request!")
     } else {
         const user = findUserById(userId)
+    if (!user){
+        res.send("User not found!");
+        return;
+    }
         //Calling  an external service which could take some time to finish.
         fetch("https://httpbin.org/delay/" + Math.floor((Math.random() * 2) + 1))
             .then(function (response) {
                 if (response.ok) {
                     var responseStr = "Adding " + amount + " to user " + userId + "...\n";
-                    user.balance += amount;
+                    user.balance += parseInt(amount);
                     responseStr += "User " + userId + " has " + user.balance;
                     res.send(responseStr);
                 } else {
@@ -74,6 +86,10 @@ function invokeBlackboxService(req, res) {
                         users = updatedUsers;
                         for (var i = 0; i < users.length; i++) {
                             if (users[i].userId == userId) {
+                                if (!isNumber(users[i].balance)){
+                                    res.send("We received a non number value from external service!")
+                                    return;
+                                }
                                 res.send("User with id: " + userId + " has " + users[i].balance);
                                 return;
                             }
